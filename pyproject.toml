@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "dmkh"
+version = "0.1.0"
+description = "Telegram YT Music Bot"
+authors = ["averagepythonfan <djonvorobei@bk.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[tool.poetry.group.bot.dependencies]
+aiogram = "^3.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
