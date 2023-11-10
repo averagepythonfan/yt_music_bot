@@ -2,7 +2,8 @@ import asyncio
 import logging
 from aiogram import Dispatcher, Bot
 from bot.config import TOKEN
-from bot.handlers import user, commands_for_bot
+from bot.handlers import user
+from bot.misc import commands_for_bot
 
 
 async def main() -> None:
