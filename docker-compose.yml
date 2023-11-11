@@ -11,3 +11,13 @@ services:
     volumes:
       - ./bot:/app/bot
     entrypoint: poetry run python3 -m bot
+  lab:
+    build:
+      context: .
+      dockerfile: docker/lab.Dockerfile
+    container_name: study_lab
+    ports:
+      - "${LAB_PORT}:${LAB_PORT}"
+    volumes:
+      - ./data:/app/data
+    entrypoint: jupyter lab --ip=0.0.0.0 --port=${LAB_PORT} --no-browser --allow-root
