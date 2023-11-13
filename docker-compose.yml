@@ -3,7 +3,7 @@ version: "3.9"
 services:
   db:
     image: postgres:alpine3.17
-    container_name: postgres_db
+    container_name: yt_db
     env_file:
       - .env
     volumes:
@@ -35,6 +35,8 @@ services:
     container_name: study_lab
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: yt_db
     ports:
       - "${LAB_PORT}:${LAB_PORT}"
     volumes:
