@@ -1,6 +1,22 @@
 version: "3.9"
 
 services:
+  db:
+    image: postgres:alpine3.17
+    container_name: postgres_db
+    env_file:
+      - .env
+    volumes:
+      - .:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: on-failure
   bot:
     build:
       context: .
@@ -10,12 +26,15 @@ services:
       - .env
     volumes:
       - ./bot:/app/bot
+    restart: on-failure
     entrypoint: poetry run python3 -m bot
   lab:
     build:
       context: .
       dockerfile: docker/lab.Dockerfile
     container_name: study_lab
+    env_file:
+      - .env
     ports:
       - "${LAB_PORT}:${LAB_PORT}"
     volumes:

@@ -20,6 +20,8 @@ ansible = "^8.6.1"
 [tool.poetry.group.lab.dependencies]
 jupyterlab = "4.0.7"
 yt-dlp = "^2023.10.13"
+sqlalchemy = "^2.0.23"
+psycopg2-binary = "^2.9.9"
 
 [build-system]
 requires = ["poetry-core"]
