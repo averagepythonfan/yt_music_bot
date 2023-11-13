@@ -11,6 +11,8 @@ python = "^3.10"
 
 [tool.poetry.group.bot.dependencies]
 aiogram = "^3.1.1"
+redis = "^5.0.1"
+aioredis = "^2.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -22,6 +24,18 @@ jupyterlab = "4.0.7"
 yt-dlp = "^2023.10.13"
 sqlalchemy = "^2.0.23"
 psycopg2-binary = "^2.9.9"
+pillow = "^10.1.0"
+pydub = "^0.25.1"
+
+
+[tool.poetry.group.back.dependencies]
+fastapi = "0.103.1"
+uvicorn = "^0.24.0.post1"
+sqlalchemy = "^2.0.23"
+alembic = "^1.12.1"
+asyncpg = "^0.29.0"
+yt-dlp = "^2023.10.13"
+pydub = "^0.25.1"
 
 [build-system]
 requires = ["poetry-core"]
