@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 RUN pip install "poetry==1.3.2"
 
-RUN apt-get install ffmpeg -y
+RUN apt-get update && apt-get install ffmpeg -y
 
 WORKDIR /app
 
