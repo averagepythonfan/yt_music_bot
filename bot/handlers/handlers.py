@@ -36,8 +36,8 @@ async def load_track(message: Message, command: CommandObject) -> None:
 @user.message(Command(commands=["status"]))
 async def user_status(message: Message) -> None:
     '''Send user status'''
-    answer = await UserService.read_user(user_id=message.from_user.id) # Implement User.service
-    await message.reply(answer)
+    # answer = await UserService.read_user(user_id=message.from_user.id) # Implement User.service
+    await message.reply(f"<b>USER ID</b>: <i>{message.from_user.id}</i>")
 
 
 @user.message(F.photo)
