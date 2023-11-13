@@ -23,9 +23,12 @@ async def load_track(message: Message, command: CommandObject) -> None:
     args = command.args
     if args:
         if args.startswith("https://www.youtube.com/watch?v="):
-            pass # Implement sevice
+            await message.reply("Here's implemented a video service")
         else:
-            await message.reply("Invalid link")
+            await message.reply(
+                text="Invalid link, should start like <i>https://www.youtube.com/watch?v=</i>",
+                parse_mode="HTML"
+            )
     else:
         await message.reply("No arguments")
 
@@ -33,5 +36,10 @@ async def load_track(message: Message, command: CommandObject) -> None:
 @user.message(Command(commands=["status"]))
 async def user_status(message: Message) -> None:
     '''Send user status'''
-    answer = await UserService.read_user(user_id=message.from_user.id)# Implement User.service
+    answer = await UserService.read_user(user_id=message.from_user.id) # Implement User.service
     await message.reply(answer)
+
+
+@user.message(F.photo)
+async def photo_handler(message: Message) -> None:
+    await message.reply(str(message))
