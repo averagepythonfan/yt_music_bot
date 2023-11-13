@@ -19,6 +19,7 @@ ansible = "^8.6.1"
 
 [tool.poetry.group.lab.dependencies]
 jupyterlab = "4.0.7"
+yt-dlp = "^2023.10.13"
 
 [build-system]
 requires = ["poetry-core"]
