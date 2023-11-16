@@ -7,3 +7,6 @@ ansible.cfg
 inventory.ini
 playbook.yml
 .vscode
+/src/migrations/__pycache__
+/src/db/__pycache__
+/src/__pycache__

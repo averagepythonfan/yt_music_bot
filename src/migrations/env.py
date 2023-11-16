@@ -1,9 +1,14 @@
 import asyncio
+import os
+import sys
 from logging.config import fileConfig
 
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
+
+path = os.getcwd()
+sys.path.append(path[:path.rfind("/")])
 
 from alembic import context
 from src.config import (POSTGRES_USER,
@@ -19,11 +24,11 @@ from src.db import Base
 config = context.config
 
 section = config.config_ini_section
-config.set_section_option(section, "POSTGRES_USER", POSTGRES_USER)
-config.set_section_option(section, "POSTGRES_PASSWORD", POSTGRES_PASSWORD)
-config.set_section_option(section, "POSTGRES_HOST", POSTGRES_HOST)
-config.set_section_option(section, "POSTGRES_PORT", POSTGRES_PORT)
-config.set_section_option(section, "POSTGRES_DB", POSTGRES_DB)
+config.set_section_option(section, "POSTGRES_USER", "zheka")
+config.set_section_option(section, "POSTGRES_PASSWORD", "AAFhgzV0qrcIZso8onHNy8nhHWzOsZZdCMo")
+config.set_section_option(section, "POSTGRES_HOST", "82.146.32.212")
+config.set_section_option(section, "POSTGRES_PORT", "2345")
+config.set_section_option(section, "POSTGRES_DB", "yt")
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
