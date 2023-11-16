@@ -21,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: docker/back.Dockerfile
-    container_name: dmkh_bot
+    container_name: backend
     env_file:
       - .env
     volumes:
