@@ -8,3 +8,5 @@ inventory.ini
 playbook.yml
 src/
 .vscode
+data/
+pgdata/
