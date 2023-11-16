@@ -17,6 +17,20 @@ services:
       retries: 3
       start_period: 40s
     restart: on-failure
+  backend:
+    build:
+      context: .
+      dockerfile: docker/back.Dockerfile
+    container_name: dmkh_bot
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "9090:9090"
+    depends_on:
+      - db
+    entrypoint: poetry run python3 -m src
   bot:
     build:
       context: .
@@ -26,6 +40,8 @@ services:
       - .env
     volumes:
       - ./bot:/app/bot
+    depends_on:
+      - db
     restart: on-failure
     entrypoint: poetry run python3 -m bot
   lab:
