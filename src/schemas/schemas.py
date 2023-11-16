@@ -1,10 +1,11 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class UserModel(BaseModel):
     user_id: int
-    user_name: str | None
-    user_status: str | None
+    user_name: Optional[str]
+    user_status: Optional[str]
 
 
 class PlaylistModel(BaseModel):
