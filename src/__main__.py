@@ -1,7 +1,12 @@
-from fastapi import FastAPI
 import uvicorn
+from fastapi import FastAPI
+from src.routers import user_router
+
 
 app = FastAPI()
+
+
+app.include_router(router=user_router)
 
 
 @app.get("/healthcheck")
