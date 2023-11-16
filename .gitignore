@@ -6,3 +6,5 @@ bot/services/__pycache__
 ansible.cfg
 inventory.ini
 playbook.yml
+src/
+.vscode
