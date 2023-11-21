@@ -9,6 +9,7 @@ class UserModel(BaseModel):
 
 
 class PlaylistModel(BaseModel):
-    playlist_id: int
+    playlist_id: Optional[int]
+    link: Optional[str]
+    playlist_name: str
     user_id: int
-    link: str

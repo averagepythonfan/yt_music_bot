@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from sqlalchemy import delete, insert, update, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.db import UserScheme, PlaylistSheme, TrackSheme
+from src.db import Users, Playlists, Tracks
 
 
 class AbstractRepository(ABC):
@@ -52,12 +52,12 @@ class SQLAlchemyRepository(AbstractRepository):
 
 
 class UserRepository(SQLAlchemyRepository):
-    model = UserScheme
+    model = Users
 
 
 class PlaylistRepository(SQLAlchemyRepository):
-    model = PlaylistSheme
+    model = Playlists
 
 
 class TrackRepository(SQLAlchemyRepository):
-    model = TrackSheme
+    model = Tracks
