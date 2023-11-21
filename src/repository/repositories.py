@@ -38,7 +38,7 @@ class SQLAlchemyRepository(AbstractRepository):
     async def read(self, filter_by: dict):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
-        return res.scalars()
+        return res.fetchall()
     
     async def update(self, id: int, data: dict) -> int:
         stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)
