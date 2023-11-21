@@ -1,44 +1,44 @@
 import datetime
+from typing import Optional, List
 from sqlalchemy.orm import DeclarativeBase, relationship
-from sqlalchemy import DATE, VARCHAR, Column, Integer, Text, ForeignKey
+from sqlalchemy import DATE, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
     pass
 
 
-class UserScheme(Base):
+class Users(Base):
     __tablename__ = "bot_users"
 
-    id = Column(Integer, unique=True, nullable=False, primary_key=True)
-    username = Column(VARCHAR(32), unique=False, nullable=True)
-    status = Column(VARCHAR(5), unique=False, nullable=False, default="guest")
-    reg_date = Column(DATE, default=datetime.datetime.today())
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[Optional[str]] = mapped_column(String(32))
+    status: Mapped[str] = mapped_column(String(5), default='guest')
+    reg_date: Mapped[datetime.datetime] = mapped_column(DATE, default=datetime.datetime.today())
 
-    playlists = relationship("PlaylistSheme", back_populates='user')
-    tracks = relationship("TrackSheme", back_populates='user')
+    playlists: Mapped[List["Playlists"]] = relationship()
 
-class PlaylistSheme(Base):
+
+class Playlists(Base):
     __tablename__ = 'playlists'
     
-    id = Column(Integer, unique=True, nullable=False, primary_key=True)
-    link = Column(Text, unique=False, nullable=False)
-    user_id = Column(Integer, ForeignKey('bot_users.id'))
-    reg_date = Column(DATE, default=datetime.datetime.today())
+    id: Mapped[int] = mapped_column(primary_key=True)
+    link: Mapped[Optional[str]]
+    playlist_name: Mapped[str]
+    user_id: Mapped[int] = mapped_column(ForeignKey("bot_users.id"), nullable=False)
+    reg_date: Mapped[datetime.datetime] = mapped_column(DATE, default=datetime.datetime.today())
 
-    user = relationship('UserSheme', back_populates='playlists')
+    playlists: Mapped[List["Tracks"]] = relationship()
 
-class TrackSheme(Base):
+class Tracks(Base):
     __tablename__ = 'tracks'
 
-    id = Column(Integer, nullable=False, unique=True, primary_key=True)
-    playlist_id = Column(Integer, ForeignKey('playlists.id'), nullable=True, unique=False)
-    user_id = Column(Integer, ForeignKey('bot_users.id'), nullable=False, unique=False)
-    track_link = Column(Text, unique=False, nullable=False)
-    track_tg_id = Column(Text, unique=False, nullable=False)
-    track_thumbnail = Column(Text, unique=False, nullable=False)
-    performer = Column(Text, unique=False, nullable=False)
-    title = Column(Text, unique=False, nullable=False)
-    reg_date = Column(DATE, default=datetime.datetime.today())
-
-    user = relationship('UserSheme', back_populates='tracks')
+    id: Mapped[int] = mapped_column(primary_key=True)
+    playlist_id: Mapped[int] = mapped_column(ForeignKey("playlists.id"))
+    track_link: Mapped[str] = mapped_column(unique=False)
+    track_tg_id: Mapped[str] = mapped_column(unique=False)
+    track_thumbnail: Mapped[str] = mapped_column(unique=False)
+    performer: Mapped[str] = mapped_column(unique=False)
+    title: Mapped[str] = mapped_column(unique=False)
+    reg_date: Mapped[datetime.datetime] = mapped_column(DATE, default=datetime.datetime.today())
