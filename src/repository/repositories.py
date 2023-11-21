@@ -28,7 +28,7 @@ class SQLAlchemyRepository(AbstractRepository):
     model = None
 
     def __init__(self, session: AsyncSession):
-        self.session = session
+        self.session: AsyncSession = session
 
     async def create(self, data: dict):
         stmt = insert(self.model).values(**data).returning(self.model.id)
@@ -38,7 +38,9 @@ class SQLAlchemyRepository(AbstractRepository):
     async def read(self, filter_by: dict):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
-        return res.fetchall()
+        f = res.fetchall()
+        cols = res.keys()
+        return [dict(zip(cols, el)) for el in f]
     
     async def update(self, id: int, data: dict) -> int:
         stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)
