@@ -9,7 +9,7 @@ class UsersService:
         """Create a new user, default status: guest
         If success, return a user id"""
 
-        data = user.model_dump()
+        data = user.model_dump(exclude_none=True)
         async with uow:
             user_id = await uow.users.create(data=data)
             await uow.commit()
@@ -25,7 +25,7 @@ class UsersService:
 
     @staticmethod
     async def update_status(uow: InterfaceUnitOfWork, user: UserModel, id: int):
-        data = user.model_dump()
+        data = user.model_dump(exclude_none=True)
         async with uow:
             res = await uow.users.update(id=id, data=data)
             await uow.commit()
@@ -33,7 +33,7 @@ class UsersService:
 
     @staticmethod
     async def delete_user(uow: InterfaceUnitOfWork, user: UserModel):
-        data = user.model_dump()
+        data = user.model_dump(exclude_none=True)
         async with uow:
             res = await uow.users.delete(data=data)
             await uow.commit()

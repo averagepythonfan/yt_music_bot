@@ -1,15 +1,18 @@
+import datetime
 from pydantic import BaseModel
 from typing import Optional
 
 
 class UserModel(BaseModel):
-    user_id: int
-    user_name: Optional[str]
-    user_status: Optional[str]
+    id: int
+    username: Optional[str] = None
+    status: Optional[str] = None
+    reg_date: Optional[datetime.datetime] = None
 
 
 class PlaylistModel(BaseModel):
-    playlist_id: Optional[int]
-    link: Optional[str]
+    id: Optional[int] = None
+    link: Optional[str] = None
     playlist_name: str
     user_id: int
+    reg_date: Optional[datetime.datetime] = None
