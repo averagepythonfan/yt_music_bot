@@ -24,8 +24,9 @@ class UsersService:
                 data = {"id": user_id}
             else:
                 data = {}
-            user = await uow.users.read(data)
+            user = await uow.users.read(filter_by=data)
             return user
+
 
     @staticmethod
     async def update_status(uow: InterfaceUnitOfWork, user: UserModel, id: int):
@@ -34,6 +35,7 @@ class UsersService:
             res = await uow.users.update(id=id, data=data)
             await uow.commit()
             return res
+
 
     @staticmethod
     async def delete_user(uow: InterfaceUnitOfWork, user: UserModel):

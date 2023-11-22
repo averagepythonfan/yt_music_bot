@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 from sqlalchemy import delete, insert, update, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db import Users, Playlists, Tracks
@@ -35,11 +36,12 @@ class SQLAlchemyRepository(AbstractRepository):
         res = await self.session.execute(stmt)
         return res.scalar_one()
 
-    async def read(self, filter_by: dict):
+    async def read(self, filter_by: dict = None):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
-        f = res.fetchall()
-        return [el.to_dict() for el in f]
+        f = res.scalars()
+        units = f.all()
+        return [el.to_dict() for el in units]
     
     async def update(self, id: int, data: dict) -> int:
         stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)
