@@ -29,8 +29,8 @@ class UsersService:
 
 
     @staticmethod
-    async def update_status(uow: InterfaceUnitOfWork, user: UserModel, id: int):
-        data = user.model_dump(exclude_none=True)
+    async def update_status(uow: InterfaceUnitOfWork, status: str, id: int):
+        data = {"status": status}
         async with uow:
             res = await uow.users.update(id=id, data=data)
             await uow.commit()

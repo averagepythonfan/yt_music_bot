@@ -30,11 +30,11 @@ async def get_user_by_id(
 
 @router.patch("/")
 async def update_status(
-    user: UserModel,
+    status: str,
     user_id: int,
     uow: Annotated[InterfaceUnitOfWork, Depends(UnitOfWork)]
 ):
-    return {"result": await UsersService.update_status(uow=uow, user=user, id=user_id)}
+    return {"result": await UsersService.update_status(uow=uow, id=user_id, status=status)}
 
 
 @router.delete("/")
