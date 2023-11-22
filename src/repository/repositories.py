@@ -31,12 +31,15 @@ class SQLAlchemyRepository(AbstractRepository):
     def __init__(self, session: AsyncSession):
         self.session: AsyncSession = session
 
-    async def create(self, data: dict):
+    async def create(self, data: dict) -> int:
+        """Create a model's instance like user, playlist and track.
+        Returns an instance ID"""
+
         stmt = insert(self.model).values(**data).returning(self.model.id)
         res = await self.session.execute(stmt)
         return res.scalar_one()
 
-    async def read(self, filter_by: dict = None):
+    async def read(self, filter_by: dict = None) -> list:
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
         f = res.scalars()
@@ -48,7 +51,7 @@ class SQLAlchemyRepository(AbstractRepository):
         res = await self.session.execute(stmt)
         return res.scalar_one()
 
-    async def delete(self, data: dict):
+    async def delete(self, data: dict) -> int:
         stmt = delete(self.model).filter_by(**data).returning(self.model.id)
         res = await self.session.execute(stmt)
         return res.scalar_one()

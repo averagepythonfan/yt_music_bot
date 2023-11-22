@@ -20,6 +20,13 @@ async def create_new_user(
     return {"result": await UsersService.add_user(uow=uow, user=user)}
 
 
+@router.get("/")
+async def get_users(
+    uow: Annotated[InterfaceUnitOfWork, Depends(UnitOfWork)]
+):
+    return {"result": await UsersService.read_user(uow=uow)}
+
+
 @router.get("/{user_id}")
 async def get_user_by_id(
     user_id: int,

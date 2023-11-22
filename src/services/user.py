@@ -1,24 +1,41 @@
 from src.repository import InterfaceUnitOfWork
 from src.schemas import UserModel
-from typing import Optional
+from typing import List, Optional
+from sqlalchemy.exc import SQLAlchemyError
 
 
 class UsersService:
+    """Class for user interactions based on CRUD.
+    It integrates in user's endpoinds.
+    Every static method accept an UoW interface,
+    that manage ORM's repository,
+    usually this is SQLAlchemy repositiry."""
+
 
     @staticmethod
-    async def add_user(uow: InterfaceUnitOfWork, user: UserModel) -> int:
-        """Create a new user, default status: guest
-        If success, return a user id"""
+    async def add_user(uow: InterfaceUnitOfWork,
+                       user: UserModel) -> Optional[int]:
+        """Create a new user, default status: guest.
+        Accepts a UoW interface and user's pydantic model.
+        If success, return a user id, otherwise return `None`"""
 
         data = user.model_dump(exclude_none=True)
         async with uow:
-            user_id = await uow.users.create(data=data)
-            await uow.commit()
-            return user_id
+            try:
+                user_id = await uow.users.create(data=data)
+                await uow.commit()
+                return user_id
+            except SQLAlchemyError as e:
+                await uow.rollback()
+                # >>> logger alert
 
 
     @staticmethod
-    async def read_user(uow: InterfaceUnitOfWork, user_id: Optional[int] = None):
+    async def read_user(uow: InterfaceUnitOfWork,
+                        user_id: Optional[int] = None) -> List[UserModel]:
+        """Finds user by ID, might be `None`.
+        Return list of one or several user"""
+
         async with uow:
             if user_id:
                 data = {"id": user_id}
@@ -29,18 +46,32 @@ class UsersService:
 
 
     @staticmethod
-    async def update_status(uow: InterfaceUnitOfWork, status: str, id: int):
+    async def update_status(uow: InterfaceUnitOfWork,
+                            status: str,
+                            id: int) -> Optional[bool]:
+        """Update user's status by ID.
+        Return `True` if success, otherwise `None`"""
+
         data = {"status": status}
         async with uow:
             res = await uow.users.update(id=id, data=data)
-            await uow.commit()
-            return res
+            if res:
+                await uow.commit()
+                return True
 
 
     @staticmethod
-    async def delete_user(uow: InterfaceUnitOfWork, user: UserModel):
+    async def delete_user(uow: InterfaceUnitOfWork,
+                          user: UserModel) -> Optional[int]:
+        """Delete user by ID.
+        Return its ID, or `None`"""
+
         data = user.model_dump(exclude_none=True)
         async with uow:
-            res = await uow.users.delete(data=data)
-            await uow.commit()
-            return res
+            try:
+                res = await uow.users.delete(data=data)
+                await uow.commit()
+                return res
+            except SQLAlchemyError:
+                pass
+                # >>> logger
