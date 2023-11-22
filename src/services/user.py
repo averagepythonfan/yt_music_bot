@@ -14,7 +14,7 @@ class UsersService:
 
     @staticmethod
     async def add_user(uow: InterfaceUnitOfWork,
-                       user: UserModel) -> Optional[int]:
+                       user: UserModel) -> Optional[int | bool]:
         """Create a new user, default status: guest.
         Accepts a UoW interface and user's pydantic model.
         If success, return a user id, otherwise return `None`"""
@@ -22,6 +22,9 @@ class UsersService:
         data = user.model_dump(exclude_none=True)
         async with uow:
             try:
+                exist = uow.users.read(filter_by={"id": user.id})
+                if exist:
+                    return False
                 user_id = await uow.users.create(data=data)
                 await uow.commit()
                 return user_id
@@ -62,11 +65,11 @@ class UsersService:
 
     @staticmethod
     async def delete_user(uow: InterfaceUnitOfWork,
-                          user: UserModel) -> Optional[int]:
+                          user_id: int) -> Optional[int]:
         """Delete user by ID.
         Return its ID, or `None`"""
 
-        data = user.model_dump(exclude_none=True)
+        data = {"id": user_id}
         async with uow:
             try:
                 res = await uow.users.delete(data=data)
