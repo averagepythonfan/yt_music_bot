@@ -1,5 +1,6 @@
 from src.repository import InterfaceUnitOfWork
 from src.schemas import UserModel
+from typing import Optional
 
 
 class UsersService:
@@ -17,9 +18,12 @@ class UsersService:
 
 
     @staticmethod
-    async def read_user(uow: InterfaceUnitOfWork, user_id: int):
-        data = {"id": user_id}
+    async def read_user(uow: InterfaceUnitOfWork, user_id: Optional[int] = None):
         async with uow:
+            if user_id:
+                data = {"id": user_id}
+            else:
+                data = {}
             user = await uow.users.read(data)
             return user
 

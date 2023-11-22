@@ -40,6 +40,8 @@ class SQLAlchemyRepository(AbstractRepository):
         res = await self.session.execute(stmt)
         f = res.fetchall()
         cols = res.keys()
+        print(f)
+        print(cols)
         return [dict(zip(cols, el)) for el in f]
     
     async def update(self, id: int, data: dict) -> int:
