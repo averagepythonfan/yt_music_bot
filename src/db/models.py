@@ -3,6 +3,7 @@ from typing import Optional, List
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy import DATE, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
+from schemas import UserModel, PlaylistModel, TrackModel
 
 
 class Base(DeclarativeBase):
@@ -19,6 +20,15 @@ class Users(Base):
 
     playlists: Mapped[List["Playlists"]] = relationship()
 
+    def to_dict(self) -> dict:
+        unit = UserModel(
+            id=self.id,
+            username=self.username,
+            status=self.status,
+            reg_date=self.reg_date
+        )
+        return unit.model_dump(exclude_none=True)
+
 
 class Playlists(Base):
     __tablename__ = 'playlists'
@@ -31,6 +41,16 @@ class Playlists(Base):
 
     playlists: Mapped[List["Tracks"]] = relationship()
 
+    def to_dict(self) -> dict:
+        unit = PlaylistModel(
+            id=self.id,
+            link=self.link,
+            playlist_name=self.playlist_name,
+            user_id=self.user_id,
+            reg_date=self.reg_date
+        )
+        return unit.model_dump(exclude_none=True)
+
 class Tracks(Base):
     __tablename__ = 'tracks'
 
@@ -42,3 +62,16 @@ class Tracks(Base):
     performer: Mapped[str] = mapped_column(unique=False)
     title: Mapped[str] = mapped_column(unique=False)
     reg_date: Mapped[datetime.datetime] = mapped_column(DATE, default=datetime.datetime.today())
+
+    def to_dict(self) -> dict:
+        unit = TrackModel(
+            id=self.id,
+            playlist_id=self.playlist_id,
+            track_link=self.track_link,
+            track_tg_id=self.track_tg_id,
+            track_thumbnail=self.track_thumbnail,
+            performer=self.performer,
+            title=self.title,
+            reg_date=self.reg_date
+        )
+        return unit.model_dump(exclude_none=True)

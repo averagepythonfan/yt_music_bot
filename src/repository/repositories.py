@@ -39,10 +39,7 @@ class SQLAlchemyRepository(AbstractRepository):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
         f = res.fetchall()
-        cols = res.keys()
-        print(f)
-        print(cols)
-        return [dict(zip(cols, el)) for el in f]
+        return [el.to_dict() for el in f]
     
     async def update(self, id: int, data: dict) -> int:
         stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)
