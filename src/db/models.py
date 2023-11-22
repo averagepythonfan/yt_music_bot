@@ -3,7 +3,7 @@ from typing import Optional, List
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy import DATE, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
-from schemas import UserModel, PlaylistModel, TrackModel
+from src.schemas import UserModel, PlaylistModel, TrackModel
 
 
 class Base(DeclarativeBase):
