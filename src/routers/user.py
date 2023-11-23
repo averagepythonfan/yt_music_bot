@@ -1,4 +1,3 @@
-from re import I
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from src.schemas import UserModel

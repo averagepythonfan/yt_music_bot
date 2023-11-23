@@ -17,7 +17,8 @@ class UsersService:
                        user: UserModel) -> Optional[int | bool]:
         """Create a new user, default status: guest.
         Accepts a UoW interface and user's pydantic model.
-        If success, return a user id, otherwise return `None`"""
+        If success, return a user id, otherwise return `None`,
+        else user already exist return `False`."""
 
         data = user.model_dump(exclude_none=True)
         async with uow:
