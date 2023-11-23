@@ -55,7 +55,8 @@ services:
     env_file:
       - .env
     environment:
-      TOKEN: ${TOKEN_DEV} 
+      TOKEN: ${TOKEN_DEV}
+      BACKEND: backend
     volumes:
       - ./bot:/app/bot
     depends_on:

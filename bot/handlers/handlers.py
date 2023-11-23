@@ -2,8 +2,9 @@ from aiogram import Router
 from aiogram import F
 from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
-from bot.services import UserService
+from bot.services import UserBotService, PlaylistBotService
 from bot.misc import help_message
+from bot.schemas import UserModel, PlaylistModel
 
 
 user = Router()
@@ -13,7 +14,22 @@ user = Router()
 async def help_command(message: Message) -> None:
     """Help command for user"""
 
-    await message.answer(help_message, parse_mode="HTML")
+    user_instance = UserModel(
+        id=message.from_user.id,
+        username=message.from_user.username,
+        status="guest"
+    )
+
+    if await UserBotService.create_user(user=user_instance):
+        playlist_instance = PlaylistModel(
+            playlist_name="other",
+            user_id=message.from_user.id
+        )
+
+        if await PlaylistBotService.create_playlist(
+            pl=playlist_instance
+        ):
+            await message.answer(help_message, parse_mode="HTML")
 
 
 @user.message(Command(commands=["track"]))
