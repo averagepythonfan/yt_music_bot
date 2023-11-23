@@ -15,10 +15,10 @@ async def tg_post_request(pic: str, track: str, payload: dict) -> Optional[dict]
         try:
             audio = open(track, "rb")
             thumbnail = open(pic, "rb")
+            data = {"audio": audio, "thumbnail": thumbnail}
             async with session.post(
                 f"https://api.telegram.org/bot{TOKEN}/sendAudio",
-                data={"audio": audio, "thumbnail": thumbnail},
-                json=payload
+                data={**data, **payload}
             ) as resp:
                 return resp
         except aiohttp.ClientError as e:
