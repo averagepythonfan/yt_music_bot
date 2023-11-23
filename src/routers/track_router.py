@@ -99,10 +99,12 @@ async def upload_track(
     vid = YouTubeService(url=url)
     await vid.from_yt_to_tg(user_id=user_id)
     if vid.is_sended:
-        plst: List[dict] = await PlaylistService.read_playlist(
+        plst_lst: List[dict] = await PlaylistService.read_playlist(
             uow=uow,
             data={"user_id": user_id, "playlist_name": "other"}
-        )[0]
+        )
+
+        plst = plst_lst[0]
 
         playlist_id = plst.get("id")
 
