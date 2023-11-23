@@ -26,10 +26,10 @@ async def help_command(message: Message) -> None:
             user_id=message.from_user.id
         )
 
-        if await PlaylistBotService.create_playlist(
+        await PlaylistBotService.create_playlist(
             pl=playlist_instance
-        ):
-            await message.answer(help_message, parse_mode="HTML")
+        )
+    await message.answer(help_message, parse_mode="HTML")
 
 
 @user.message(Command(commands=["track"]))

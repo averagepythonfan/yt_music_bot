@@ -9,7 +9,7 @@ from .misc import (tg_post_request,
 from .track_service import TrackService
 from src.schemas import TrackModel
 from PIL import Image
-from aiohttp import ClientResponse, ClientSession
+from aiohttp import ClientResponse, ClientSession, ClientError
 
 
 class YouTubeService:
@@ -60,12 +60,15 @@ class YouTubeService:
     async def fetch_pic(self) -> ClientResponse:
         async with ClientSession() as session:
             async with session.get(self.thumb_link) as resp:
-                return resp
+                if resp.status == 200:
+                    return await resp.read()
+                else:
+                    raise ClientError("Failed to fetch pic")
 
 
     async def _extract_thumbnail(self):
         pic = await self.fetch_pic()
-        img = Image.open(BytesIO(pic.content))
+        img = Image.open(BytesIO(pic))
         width, height = img.size
 
         sq = min([width, height])
