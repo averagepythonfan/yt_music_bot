@@ -64,4 +64,3 @@ class PlaylistService:
             except SQLAlchemyError:
                 pass
                 # >>> logger
-
