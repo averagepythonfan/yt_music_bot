@@ -23,7 +23,7 @@ class UsersService:
         data = user.model_dump(exclude_none=True)
         async with uow:
             try:
-                exist = uow.users.read(filter_by={"id": user.id})
+                exist = await uow.users.read(filter_by={"id": user.id})
                 if exist:
                     return False
                 user_id = await uow.users.create(data=data)
