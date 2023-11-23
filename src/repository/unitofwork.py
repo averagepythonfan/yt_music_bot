@@ -10,8 +10,8 @@ from .repositories import (
 
 class InterfaceUnitOfWork(ABC):
     users: Type[UserRepository]
-    tasks: Type[PlaylistRepository]
-    task_history: Type[TrackRepository]
+    playlists: Type[PlaylistRepository]
+    tracks: Type[TrackRepository]
     
     @abstractmethod
     async def __init__(self):
