@@ -11,7 +11,9 @@ class PlaylistService:
     @staticmethod
     async def add_playlist(uow: InterfaceUnitOfWork,
                            pl: PlaylistModel) -> Optional[int]:
-        """Create playlist."""
+        """Create playlist.
+        
+        Return a playlist ID if success"""
 
         data = pl.model_dump(exclude_none=True)
         async with uow:
@@ -22,15 +24,11 @@ class PlaylistService:
 
     @staticmethod
     async def read_playlist(uow: InterfaceUnitOfWork,
-                            pl_id: Optional[int] = None) -> List[PlaylistModel]:
+                            data: Optional[dict] = {}) -> List[PlaylistModel]:
         """Finds playlist by ID, might be `None`.
         Return list of one or several playlists"""
 
         async with uow:
-            if pl_id:
-                data = {"id": pl_id}
-            else:
-                data = {}
             pls = await uow.playlists.read(filter_by=data)
             return pls
 

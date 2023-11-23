@@ -1,7 +1,7 @@
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException
 from src.schemas import TrackModel
-from src.services import TrackService
+from src.services import TrackService, YouTubeService, PlaylistService
 from src.repository import UnitOfWork, InterfaceUnitOfWork
 
 
@@ -88,3 +88,32 @@ async def delete_track_by_id(
             status_code=463,
             detail={"fail": "track not found"}
         )
+
+
+@router.post("/upload")
+async def upload_track(
+    user_id: int,
+    url: str,
+    uow: Annotated[InterfaceUnitOfWork, Depends(UnitOfWork)]
+):
+    vid = YouTubeService(url=url)
+    await vid.from_yt_to_tg(user_id=user_id)
+    if vid.is_sended:
+        plst: List[dict] = await PlaylistService.read_playlist(
+            uow=uow,
+            data={"user_id": user_id, "playlist_name": "other"}
+        )[0]
+
+        playlist_id = plst.get("id")
+
+        track = TrackModel(
+            id=vid.response_data["result"]["message_id"],
+            playlist_id=playlist_id,
+            track_link=url,
+            track_tg_id=vid.response_data['result']['audio']['file_id'],
+            track_thumbnail=vid.response_data['result']['audio']['thumbnail']['file_id'],
+            performer=vid.response_data['result']['audio']['performer'],
+            title=vid.response_data['result']['audio']['title']
+        )
+
+        return {"result": await TrackService.add_track(uow=uow, track=track)}
