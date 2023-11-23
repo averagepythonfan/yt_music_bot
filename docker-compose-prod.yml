@@ -8,8 +8,6 @@ services:
       - .env
     volumes:
       - .:/var/lib/postgresql/data
-    ports:
-      - "${POSTGRES_PORT}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 1m30s
@@ -29,8 +27,6 @@ services:
       TOKEN: ${TOKEN_PROD}
     volumes:
       - ./src:/app/src
-    ports:
-      - "9090:9090"
     depends_on:
       - db
     restart: on-failure
