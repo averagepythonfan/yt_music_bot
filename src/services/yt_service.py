@@ -91,7 +91,7 @@ class YouTubeService:
 
     async def _send_to_user(self, user_id: int) -> ClientResponse:
         payload = {
-            'chat_id': user_id,
+            'chat_id': str(user_id),
             'performer': self.performer,
             "title": self.song_name,
             'parse_mode': 'HTML',
