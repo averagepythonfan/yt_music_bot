@@ -110,10 +110,9 @@ class YouTubeService:
         # print("[interface] audio extracted")
         await self._extract_thumbnail()
         # print("[interface] thumbnail extracted")
-        tg_response = await self._send_to_user(user_id=user_id)
-        if tg_response.status == 200:
+        self.response_data = await self._send_to_user(user_id=user_id)
             # print("[interface] send audio to user")
-            self._clear_data()
-            # print("[interface] clear data")
+        if self.response_data:
             self.is_sended = True
-        self.response_data = await tg_response.json()
+        self._clear_data()
+        # print("[interface] clear data")

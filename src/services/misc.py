@@ -20,7 +20,8 @@ async def tg_post_request(pic: str, track: str, payload: dict) -> Optional[dict]
                 f"https://api.telegram.org/bot{TOKEN}/sendAudio",
                 data={**data, **payload}
             ) as resp:
-                return resp
+                if resp.status == 200:
+                    return await resp.json()
         except aiohttp.ClientError as e:
             pass
         finally:
