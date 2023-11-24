@@ -36,6 +36,14 @@
       tags:
         - up
     
+    - name: run alembic migrations
+      community.docker.docker_container_exec:
+        container: backend_prod
+        command: cd src/ && alembic upgrade head && cd ..
+        chdir: /app
+      tags:
+        - up
+    
     - name: Down all dev services
       ansible.builtin.shell:
         cmd: "docker compose -f docker-compose-prod.yml down"
