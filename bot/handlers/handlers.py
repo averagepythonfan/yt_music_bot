@@ -62,9 +62,10 @@ async def load_track(message: Message, command: CommandObject) -> None:
 @user.message(Command(commands=["status"]))
 async def user_status(message: Message) -> None:
     '''Send user status'''
-    answer = await UserBotService.read_user(user_id=message.from_user.id)
-    await message.reply(f"<b>USER ID</b>: <i>{message.from_user.id}</i>\nDATA: {answer}",
-                        parse_mode="HTML")
+    answer: UserModel = await UserBotService.read_user(user_id=message.from_user.id)
+    if answer:
+        await message.reply(f"<b>USER ID</b>: <i>{answer.id}</i>\nDATA: {answer.status}",
+                            parse_mode="HTML")
 
 
 @user.message(F.photo)

@@ -30,18 +30,20 @@ class UserBotService:
     
 
     @staticmethod
-    async def read_user(user_id: int) -> Optional[User]:
-        """Enters a Telegram user ID,
-        return a JSON with user data or None"""
+    async def read_user(user_id: int) -> Optional[UserModel]:
+        """Accept a Telegram user ID,
+        return a pydantic UserModel or `None`"""
 
-        return await back_request(
+        user = await back_request(
             req=Request("get"),
             url=f"http://{BACKEND}:9090/user/{user_id}"
         )
-    
+        if user:
+            return UserModel.model_validate(user["result"])
+
 
     @staticmethod
-    async def update_user(user_id: int, params: dict) -> Optional[User]:
+    async def update_user(user_id: int, params: dict) -> Optional[UserModel]:
         """Enter user ID and update data,
         return User object or None"""
 
