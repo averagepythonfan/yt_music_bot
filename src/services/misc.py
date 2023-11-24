@@ -12,6 +12,9 @@ async def pic_content(url):
 
 
 async def tg_post_request(formdata: FormData) -> Optional[dict]:
+    """Makes a POST request to Telegram server.
+    Return a dict data, otherwise return `None`."""
+
     async with aiohttp.ClientSession() as session:
         try:
             async with session.post(

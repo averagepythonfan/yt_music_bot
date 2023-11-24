@@ -1,13 +1,11 @@
 import copy
 import os
 from io import BytesIO
-from fastapi.concurrency import contextmanager_in_threadpool
+from typing import Optional
 from yt_dlp import YoutubeDL
 from .misc import (tg_post_request,
                    YtInstance,
                    pic_content)
-from .track_service import TrackService
-from src.schemas import TrackModel
 from PIL import Image
 from aiohttp import (ClientResponse,
                      ClientSession,
@@ -16,12 +14,15 @@ from aiohttp import (ClientResponse,
 
 
 class YouTubeService:
+    """Service for working with yt-dlp, files
+    and TelegramBot API."""
+
 
     default_config = {
         'format': 'mp3/bestaudio/best',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
+            'preferredcodec': 'm4a',
         }]
     }
 
@@ -29,17 +30,34 @@ class YouTubeService:
                  url: str,
                  yt_opt: dict = None,
                  instanse: YtInstance = YtInstance("video")) -> None:
+        """Init YouTubeService instance.
+        
+        :param: `url` - must be `str`, a URL link of video.
+            Might be earn from share and looks like:
+            >>> url = "https://youtu.be/jyI2PqPsOFs?si=rz2eWeRuHX-iufcb"
+            Simple link from address bar is also valid:
+            >>> url = "https://www.youtube.com/watch?v=irfj8pQwhno"
+
+        :param: `yt_opt` - a dict with yt-dlp config.
+            If yt_opt is `None` then initialize default config from class attribute.
+
+        :param: `instanse` - YtInstance object, might be
+            YtInstance("video") or YtInstance("playlist"),
+            otherwise raise Assertion Error."""
+
         assert isinstance(instanse, YtInstance), "YtInstance must be video or playlist"
+
         self.url = url
         self.config = self.default_config if yt_opt is None else yt_opt
         with YoutubeDL({}) as ydl:
+            # download video metadata
             info = ydl.extract_info(self.url, download=False)
             title = copy.deepcopy(info['title'])
             self.performer, self.song_name = (el.strip() for el in title.split("-"))
             self.thumb_link = copy.deepcopy(info["thumbnail"])
             del info
         self.config["outtmpl"] = f"{self.performer} - {self.song_name}"
-        self.path_music = f"{os.getcwd()}/{self.performer} - {self.song_name}.mp3"
+        self.path_music = f"{os.getcwd()}/{self.performer} - {self.song_name}.m4a"
         self.is_sended = False
     
 
@@ -56,11 +74,23 @@ class YouTubeService:
     
 
     def _extract_audio(self):
+        """Download video and convert it to audio
+        according to config.
+        
+        May throw yt-dlp exceptions"""
+
         with YoutubeDL(self.config) as ydl:
             error_code = ydl.download(self.url)
     
 
-    async def fetch_pic(self) -> ClientResponse:
+    async def fetch_pic(self) -> Optional[bytes]:
+        """Download pic from vid's metadata.
+        Using aiohttp's ClientSession.
+        
+        Return:
+            `bytes` - if request was successfull.
+            `None` - otherwise."""
+
         async with ClientSession() as session:
             async with session.get(self.thumb_link) as resp:
                 if resp.status == 200:
@@ -69,7 +99,10 @@ class YouTubeService:
                     raise ClientError("Failed to fetch pic")
 
 
-    async def _extract_thumbnail(self):
+    async def _extract_thumbnail(self) -> None:
+        """Fetch pic from URL, crop it and resize it.
+        Returns `None`"""
+
         pic = await self.fetch_pic()
         img = Image.open(BytesIO(pic))
         width, height = img.size
@@ -88,11 +121,16 @@ class YouTubeService:
 
 
     def _clear_data(self):
+        """Delete audio and thumbnail files."""
         os.remove(self.path_music)
         os.remove(self.path_thumbnail)
     
 
-    async def _send_to_user(self, user_id: int) -> ClientResponse:
+    async def _send_to_user(self, user_id: int) -> Optional[ClientResponse]:
+        """Send audio to user by user_id using TGBot API.
+        :params: `user_id` - must be int
+        
+        Return response from telegram server or `None`."""
 
         data = FormData()
 
@@ -119,7 +157,6 @@ class YouTubeService:
             content_type="multipart/form-data"
         )
 
-        
         response_data = await tg_post_request(
             formdata=data
         )
@@ -130,14 +167,10 @@ class YouTubeService:
         return response_data
 
     async def from_yt_to_tg(self, user_id: int):
-        # print(f"[interface] start extract audio for {user_id}")
+        """Makes a full pipeline of YouTube-to-Telegram transitions."""
         self._extract_audio()
-        # print("[interface] audio extracted")
         await self._extract_thumbnail()
-        # print("[interface] thumbnail extracted")
         self.response_data = await self._send_to_user(user_id=user_id)
-            # print("[interface] send audio to user")
         if self.response_data:
             self.is_sended = True
         self._clear_data()
-        # print("[interface] clear data")
