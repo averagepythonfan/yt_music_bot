@@ -9,7 +9,7 @@ class TrackBotService:
     async def upload_track(url, user_id):
         return await back_request(
             req=Request("post"),
-            url=f"http://{BACKEND}:9090/user/",
+            url=f"http://{BACKEND}:9090/track/upload",
             params={
                 "user_id": user_id,
                 "url": url,
