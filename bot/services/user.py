@@ -36,8 +36,7 @@ class UserBotService:
 
         return await back_request(
             req=Request("get"),
-            url=f"http://{BACKEND}:9090/user/",
-            params={"user_id": str(user_id)}
+            url=f"http://{BACKEND}:9090/user/{user_id}"
         )
     
 
