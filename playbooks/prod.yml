@@ -1,0 +1,51 @@
+- name: My first play
+  hosts: devhost
+  remote_user: root
+  tasks:
+    - name: Clone of a DEV branch
+      ansible.builtin.git:
+        repo: https://github.com/averagepythonfan/yt_music_bot.git
+        dest: /home/repos/yt_music_prod/
+        single_branch: yes
+        force: yes
+        version: main
+      tags:
+        - up
+
+    - name: pip install docker, docker-compose
+      ansible.builtin.pip:
+        name:
+          - docker
+          - docker-compose
+      tags:
+        - up
+
+    - name: Copy env file
+      ansible.builtin.copy:
+        src: .env
+        dest: /home/repos/yt_music_prod/.env
+      tags:
+        - up
+
+    - name: Docker compose up
+      community.docker.docker_compose:
+        build: true
+        project_src: /home/repos/yt_music_prod/
+        files:
+          - docker-compose-prod.yml
+      tags:
+        - up
+    
+    - name: Down all dev services
+      ansible.builtin.shell:
+        cmd: "docker compose -f docker-compose-prod.yml down"
+        chdir: /home/repos/yt_music_prod/
+      register: output
+      tags:
+        - down
+    
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
+      tags:
+        - down
