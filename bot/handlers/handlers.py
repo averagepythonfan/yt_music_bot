@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram import F
 from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
-from bot.services import UserBotService, PlaylistBotService
+from bot.services import UserBotService, PlaylistBotService, TrackBotService
 from bot.misc import help_message
 from bot.schemas import UserModel, PlaylistModel
 
@@ -38,11 +38,20 @@ async def load_track(message: Message, command: CommandObject) -> None:
 
     args = command.args
     if args:
-        if args.startswith("https://www.youtube.com/watch?v="):
-            await message.reply("Here's implemented a video service")
+        if args.startswith("https://www.youtu"):
+            await message.reply("Here we go! Please, wait")
+            if await TrackBotService.upload_track(
+                url=args,
+                user_id=message.from_user.id
+            ):
+                pass
+            else:
+                await message.answer("Oops, something went wrong...")
         else:
             await message.reply(
-                text="Invalid link, should start like <i>https://www.youtube.com/watch?v=</i>",
+                text="""Invalid link.
+                Should start like <i>https://www.youtube.com/watch?v=</i>
+                or <i>https://youtu.be/</i>""",
                 parse_mode="HTML"
             )
     else:
@@ -53,7 +62,7 @@ async def load_track(message: Message, command: CommandObject) -> None:
 async def user_status(message: Message) -> None:
     '''Send user status'''
     # answer = await UserService.read_user(user_id=message.from_user.id) # Implement User.service
-    await message.reply(f"<b>USER ID</b>: <i>{message.from_user.id}</i>")
+    await message.reply(f"<b>USER ID</b>: <i>{message.from_user.id}</i>", parse_mode="HTML")
 
 
 @user.message(F.photo)

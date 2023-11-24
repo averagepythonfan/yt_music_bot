@@ -6,6 +6,7 @@ from .enums import Request
 async def back_request(req: Request,
                        url: str = "url",
                        params: dict = None) -> Optional[bool]:
+    """"""
     async with aiohttp.ClientSession() as session:
         if req is Request.get:
             async with session.get(url, params=params) as resp:

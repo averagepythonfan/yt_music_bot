@@ -3,9 +3,9 @@ from aiogram import types
 
 bot_commands = (
     ('track', 'load one track from vid'),
-    ("playlist", "load YT playlist"),
+    ("playlist", "load YT playlist (unavailable)"),
     ('status', 'user status'),
-    ('cut', "cut one vid with timings"),
+    ('cut', "cut one vid with timings (unavailable)"),
 )
 
 
