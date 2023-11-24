@@ -9,7 +9,10 @@ from .misc import (tg_post_request,
 from .track_service import TrackService
 from src.schemas import TrackModel
 from PIL import Image
-from aiohttp import ClientResponse, ClientSession, ClientError
+from aiohttp import (ClientResponse,
+                     ClientSession,
+                     ClientError,
+                     FormData)
 
 
 class YouTubeService:
@@ -90,19 +93,41 @@ class YouTubeService:
     
 
     async def _send_to_user(self, user_id: int) -> ClientResponse:
-        payload = {
-            'chat_id': str(user_id),
-            'performer': self.performer,
-            "title": self.song_name,
-            'parse_mode': 'HTML',
-        }
-        
-        return await tg_post_request(
-            pic=self.path_thumbnail,
-            track=self.path_music,
-            payload=payload
+
+        data = FormData()
+
+        data.add_field(name="chat_id", value=str(user_id))
+        data.add_field(name="performer", value=self.performer)
+        data.add_field(name="title", value=self.song_name)
+        data.add_field(name="parse_mode", value="HTML")
+
+        audio = open(self.path_music, "rb")
+
+        data.add_field(
+            name="audio",
+            value=audio,
+            filename=self.path_music,
+            content_type="multipart/form-data"
         )
 
+        thumbnail = open(self.path_thumbnail, "rb")
+
+        data.add_field(
+            name="thumbnail",
+            value=thumbnail,
+            filename=self.path_thumbnail,
+            content_type="multipart/form-data"
+        )
+
+        
+        response_data = await tg_post_request(
+            formdata=data
+        )
+
+        audio.close()
+        thumbnail.close()
+
+        return response_data
 
     async def from_yt_to_tg(self, user_id: int):
         # print(f"[interface] start extract audio for {user_id}")
