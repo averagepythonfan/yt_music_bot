@@ -27,3 +27,8 @@ class TrackModel(BaseModel):
     performer: str
     title: str
     reg_date: Optional[datetime.datetime] = None
+
+
+class SingleVid(BaseModel):
+    user_id: int
+    url: str

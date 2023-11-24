@@ -1,1 +1,1 @@
-from .schemas import UserModel, PlaylistModel, TrackModel
+from .schemas import UserModel, PlaylistModel, TrackModel, SingleVid
