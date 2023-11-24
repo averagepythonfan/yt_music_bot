@@ -39,7 +39,7 @@ class UserBotService:
             url=f"http://{BACKEND}:9090/user/{user_id}"
         )
         if user:
-            return UserModel.model_validate(user["result"])
+            return UserModel.model_validate(user["result"][0])
 
 
     @staticmethod
