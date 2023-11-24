@@ -64,7 +64,7 @@ async def user_status(message: Message) -> None:
     '''Send user status'''
     answer: UserModel = await UserBotService.read_user(user_id=message.from_user.id)
     if answer:
-        await message.reply(f"<b>USER ID</b>: <i>{answer.id}</i>\nDATA: {answer.status}",
+        await message.reply(f"<b>USER ID</b>: <i>{answer.id}</i>\nSTATUS: {answer.status}",
                             parse_mode="HTML")
 
 
