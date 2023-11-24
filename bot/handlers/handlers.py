@@ -29,6 +29,7 @@ async def help_command(message: Message) -> None:
         await PlaylistBotService.create_playlist(
             pl=playlist_instance
         )
+
     await message.answer(help_message, parse_mode="HTML")
 
 
@@ -61,8 +62,9 @@ async def load_track(message: Message, command: CommandObject) -> None:
 @user.message(Command(commands=["status"]))
 async def user_status(message: Message) -> None:
     '''Send user status'''
-    # answer = await UserService.read_user(user_id=message.from_user.id) # Implement User.service
-    await message.reply(f"<b>USER ID</b>: <i>{message.from_user.id}</i>", parse_mode="HTML")
+    answer = await UserBotService.read_user(user_id=message.from_user.id)
+    await message.reply(f"<b>USER ID</b>: <i>{message.from_user.id}</i>\nDATA: {answer}",
+                        parse_mode="HTML")
 
 
 @user.message(F.photo)
