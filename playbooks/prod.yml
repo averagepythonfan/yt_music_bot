@@ -39,8 +39,7 @@
     - name: run alembic migrations
       community.docker.docker_container_exec:
         container: backend_prod
-        command: cd src/ && alembic upgrade head && cd ..
-        chdir: /app
+        command: /bin/bash -c "cd /app/src/ && alembic upgrade head"
       tags:
         - up
     
