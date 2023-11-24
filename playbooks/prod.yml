@@ -1,8 +1,8 @@
 - name: My first play
-  hosts: devhost
+  hosts: prodhost
   remote_user: root
   tasks:
-    - name: Clone of a DEV branch
+    - name: Clone of a PROD branch
       ansible.builtin.git:
         repo: https://github.com/averagepythonfan/yt_music_bot.git
         dest: /home/repos/yt_music_prod/
