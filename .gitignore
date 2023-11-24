@@ -12,3 +12,4 @@ src/__pycache__
 src/migrations/__pycache__
 src/migrations/versions/__pycache__
 src/db/__pycache__
+playbooks/files/
