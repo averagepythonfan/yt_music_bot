@@ -98,9 +98,11 @@ async def upload_track(
     """Requires a single video scheme: url and user ID.
     
     Return a track_id that depends on message id from tg response."""
-    vid = YouTubeService(url=vid.url)
-    await vid.from_yt_to_tg(user_id=vid.user_id)
-    if vid.is_sended:
+
+    yt = YouTubeService(url=vid.url)
+    await yt.from_yt_to_tg(user_id=vid.user_id)
+
+    if yt.is_sended:
         plst_lst: List[dict] = await PlaylistService.read_playlist(
             uow=uow,
             data={"user_id": vid.user_id, "playlist_name": "other"}
@@ -111,13 +113,13 @@ async def upload_track(
         playlist_id = plst.get("id")
 
         track = TrackModel(
-            id=vid.response_data["result"]["message_id"],
+            id=yt.response_data["result"]["message_id"],
             playlist_id=playlist_id,
             track_link=vid.url,
-            track_tg_id=vid.response_data['result']['audio']['file_id'],
-            track_thumbnail=vid.response_data['result']['audio']['thumbnail']['file_id'],
-            performer=vid.response_data['result']['audio']['performer'],
-            title=vid.response_data['result']['audio']['title']
+            track_tg_id=yt.response_data['result']['audio']['file_id'],
+            track_thumbnail=yt.response_data['result']['audio']['thumbnail']['file_id'],
+            performer=yt.response_data['result']['audio']['performer'],
+            title=yt.response_data['result']['audio']['title']
         )
 
         return {"result": await TrackService.add_track(uow=uow, track=track)}
