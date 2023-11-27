@@ -46,6 +46,10 @@ services:
     depends_on:
       - db
     entrypoint: poetry run python3 -m src
+  redis:
+    image: redis:latest
+    container_name: redis_dev
+    entrypoint: redis-server --requirepass ${REDIS_PASSWORD}
   bot:
     build:
       context: .
@@ -56,10 +60,11 @@ services:
     environment:
       TOKEN: ${TOKEN_DEV}
       BACKEND: backend
+      REDIS: ${REDIS_PASSWORD}
     volumes:
       - ./bot:/app/bot
     depends_on:
-      - db
+      - redis
     restart: on-failure
     entrypoint: poetry run python3 -m bot
   lab:
