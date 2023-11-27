@@ -29,23 +29,6 @@ services:
       retries: 3
       start_period: 40s
     restart: on-failure
-  backend:
-    build:
-      context: .
-      dockerfile: docker/back.Dockerfile
-    container_name: backend
-    env_file:
-      - .env
-    environment:
-      POSTGRES_HOST: yt_db
-      TOKEN: ${TOKEN_DEV}
-    volumes:
-      - ./src:/app/src
-    ports:
-      - "9090:9090"
-    depends_on:
-      - db
-    entrypoint: poetry run python3 -m src
   redis:
     image: redis:latest
     container_name: redis_dev
@@ -61,7 +44,6 @@ services:
     environment:
       TOKEN: ${TOKEN_DEV}
       BACKEND: backend
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: redis_dev
     volumes:
       - ./bot:/app/bot
@@ -69,6 +51,25 @@ services:
       - redis
     restart: on-failure
     entrypoint: poetry run python3 -m bot
+  backend:
+    build:
+      context: .
+      dockerfile: docker/back.Dockerfile
+    container_name: backend
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: yt_db
+      TOKEN: ${TOKEN_DEV}
+      REDIS_HOST: redis_dev
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "9090:9090"
+    depends_on:
+      - db
+      - redis
+    entrypoint: poetry run python3 -m src
   celery:
     build:
       context: .
@@ -79,27 +80,26 @@ services:
     environment:
       POSTGRES_HOST: db_prod
       TOKEN: ${TOKEN_PROD}
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
       REDIS_HOST: redis_dev
     volumes:
       - ./src:/app/src
     depends_on:
-      - db
+      - backend
       - redis
     restart: on-failure
     entrypoint: celery --app=src.tasks.tasks:celery worker -l INFO
-  lab:
-    build:
-      context: .
-      dockerfile: docker/lab.Dockerfile
-    container_name: study_lab
-    env_file:
-      - .env
-    environment:
-      POSTGRES_HOST: yt_db
-      TOKEN: ${TOKEN_DEV}
-    ports:
-      - "${LAB_PORT}:${LAB_PORT}"
-    volumes:
-      - ./data:/app/data
-    entrypoint: jupyter lab --ip=0.0.0.0 --port=${LAB_PORT} --no-browser --allow-root
+  # lab:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/lab.Dockerfile
+  #   container_name: study_lab
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     POSTGRES_HOST: yt_db
+  #     TOKEN: ${TOKEN_DEV}
+  #   ports:
+  #     - "${LAB_PORT}:${LAB_PORT}"
+  #   volumes:
+  #     - ./data:/app/data
+  #   entrypoint: jupyter lab --ip=0.0.0.0 --port=${LAB_PORT} --no-browser --allow-root
