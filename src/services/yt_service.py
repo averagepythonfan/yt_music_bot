@@ -5,7 +5,6 @@ from typing import Optional
 from yt_dlp import YoutubeDL
 from .misc import (tg_post_request,
                    YtInstance,
-                   pic_content,
                    longer_then_12_min)
 from PIL import Image
 from aiohttp import (ClientResponse,
@@ -188,6 +187,7 @@ class YouTubeService:
         self._extract_audio()
         await self._extract_thumbnail()
         self.response_data = await self._send_to_user(user_id=user_id)
-        if self.response_data:
-            self.is_sended = True
+        # if self.response_data:
+        #     self.is_sended = True
         self._clear_data()
+        return self.response_data

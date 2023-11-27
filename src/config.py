@@ -8,3 +8,6 @@ POSTGRES_DB = os.getenv("POSTGRES_DB")
 
 ADMIN = os.getenv("ADMIN")
 TOKEN = os.getenv("TOKEN")
+
+REDIS_HOST: str = os.getenv("REDIS_HOST")
+REDIS_PASSWORD: str = os.getenv("REDIS_PASSWORD")

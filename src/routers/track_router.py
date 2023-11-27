@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from src.schemas import TrackModel, SingleVid
 from src.services import TrackService, YouTubeService, PlaylistService
 from src.repository import UnitOfWork, InterfaceUnitOfWork
+from src.tasks.tasks import yt_task
 
 
 router = APIRouter(
@@ -99,10 +100,9 @@ async def upload_track(
     
     Return a track_id that depends on message id from tg response."""
 
-    yt = YouTubeService(url=vid.url)
-    await yt.from_yt_to_tg(user_id=vid.user_id)
+    resp = yt_task.delay(vid.url, vid.user_id)
 
-    if yt.is_sended:
+    if resp:
         plst_lst: List[dict] = await PlaylistService.read_playlist(
             uow=uow,
             data={"user_id": vid.user_id, "playlist_name": "other"}
@@ -113,13 +113,13 @@ async def upload_track(
         playlist_id = plst.get("id")
 
         track = TrackModel(
-            id=yt.response_data["result"]["message_id"],
+            id=resp["result"]["message_id"],
             playlist_id=playlist_id,
             track_link=vid.url,
-            track_tg_id=yt.response_data['result']['audio']['file_id'],
-            track_thumbnail=yt.response_data['result']['audio']['thumbnail']['file_id'],
-            performer=yt.response_data['result']['audio']['performer'],
-            title=yt.response_data['result']['audio']['title']
+            track_tg_id=resp['result']['audio']['file_id'],
+            track_thumbnail=resp['result']['audio']['thumbnail']['file_id'],
+            performer=resp['result']['audio']['performer'],
+            title=resp['result']['audio']['title']
         )
 
         return {"result": await TrackService.add_track(uow=uow, track=track)}
