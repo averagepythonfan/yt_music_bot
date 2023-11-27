@@ -73,11 +73,14 @@ services:
     build:
       context: .
       dockerfile: docker/back.Dockerfile
+    container_name: celery_dev
     env_file:
       - .env
     environment:
       POSTGRES_HOST: db_prod
       TOKEN: ${TOKEN_PROD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: redis_dev
     volumes:
       - ./src:/app/src
     depends_on:

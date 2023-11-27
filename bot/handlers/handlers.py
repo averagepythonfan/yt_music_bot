@@ -43,7 +43,7 @@ async def load_track(message: Message, command: CommandObject) -> None:
 
     args = command.args
     if args:
-        if args.startswith("https://www.youtu"):
+        if args.startswith("https://www.youtu") or args.startswith("https://youtu.be/"):
             await message.reply("Here we go! Please, wait")
             if await TrackBotService.upload_track(
                 url=args,
