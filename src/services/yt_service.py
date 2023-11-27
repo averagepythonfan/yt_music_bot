@@ -56,8 +56,8 @@ class YouTubeService:
             self.channel_name: str = copy.deepcopy(info["channel"])
             self.thumb_link: str = copy.deepcopy(info["thumbnail"])
             del info
-        self.config["outtmpl"] = f"{self.performer} - {self.song_name}"
-        self.path_music = f"{os.getcwd()}/{self.performer} - {self.song_name}.m4a"
+        self.config["outtmpl"] = f"{self.video_title}"
+        self.path_music = f"{os.getcwd()}/{self.video_title}.m4a"
         self.is_sended = False
         if len(self.video_title.split(" - ", maxsplit=2)) == 2:
             self.performer, self.song_name = (
