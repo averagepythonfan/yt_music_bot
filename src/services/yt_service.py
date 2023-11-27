@@ -5,7 +5,8 @@ from typing import Optional
 from yt_dlp import YoutubeDL
 from .misc import (tg_post_request,
                    YtInstance,
-                   pic_content)
+                   pic_content,
+                   longer_then_12_min)
 from PIL import Image
 from aiohttp import (ClientResponse,
                      ClientSession,
@@ -20,6 +21,7 @@ class YouTubeService:
 
     default_config = {
         'format': 'mp3/bestaudio/best',
+        'match_filter': longer_then_12_min,
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'm4a',
@@ -95,7 +97,7 @@ class YouTubeService:
         May throw yt-dlp exceptions"""
 
         with YoutubeDL(self.config) as ydl:
-            error_code = ydl.download(self.url)
+            self.error_code = ydl.download(self.url)
     
 
     async def fetch_pic(self) -> Optional[bytes]:

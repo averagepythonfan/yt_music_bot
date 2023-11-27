@@ -31,3 +31,11 @@ async def tg_post_request(formdata: FormData) -> Optional[dict]:
 class YtInstance(Enum):
     video = "video"
     playlist = "playlist"
+
+
+
+def longer_then_12_min(info, *, incomplete):
+    """Download only videos longer than a minute (or with unknown duration)"""
+    duration = info.get('duration')
+    if duration and duration > 720:
+        return 'The video is too long'
