@@ -1,18 +1,24 @@
 import asyncio
 import logging
+from redis.asyncio.client import Redis
 from aiogram import Dispatcher, Bot
-from bot.config import TOKEN
-from bot.handlers import user
+from bot.config import TOKEN, REDIS
+from bot.handlers import user, admin
 from bot.misc import commands_for_bot
+from aiogram.fsm.storage.redis import RedisStorage
 
 
 async def main() -> None:
     logging.basicConfig(level=logging.DEBUG)
-    
-    dp = Dispatcher()
+
+    redis = Redis(host="redis_dev", password=REDIS)
+    storage = RedisStorage(redis=redis)
+
+    dp = Dispatcher(storage=storage)
     bot = Bot(token=TOKEN)
 
     dp.include_router(router=user)
+    dp.include_router(router=admin)
     await bot.set_my_commands(commands=commands_for_bot)
     await dp.start_polling(bot)
 

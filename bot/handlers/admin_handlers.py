@@ -1,0 +1,28 @@
+from aiogram import Router, F
+from bot.filters import AdminFilter
+from aiogram.types import Message, Audio, PhotoSize
+from aiogram.filters import Command, CommandObject
+
+admin = Router()
+
+
+@admin.message(AdminFilter(), F.photo)
+async def change_pic(message: Message):
+    if msg := message.reply_to_message:
+        audio = isinstance(msg.audio, Audio)
+        pic = isinstance(message.photo[1], PhotoSize)
+        if audio and pic:
+            await message.answer("AUDIO MOCK!")
+        else:
+            await message.reply("Please select audio, and reply a pucture")
+    else:
+        await message.reply("There is not reply message. Please select")
+
+
+@admin.message(AdminFilter(), Command(commands=["change"]))
+async def chencge_status(message: Message, command: CommandObject):
+    if command.args:
+        await message.reply("User interface change user's status")
+        await message.reply("Success")
+    else:
+        await message.reply("There is not args")

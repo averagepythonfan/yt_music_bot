@@ -67,7 +67,3 @@ async def user_status(message: Message) -> None:
         await message.reply(f"<b>USER ID</b>: <i>{answer.id}</i>\nSTATUS: {answer.status}",
                             parse_mode="HTML")
 
-
-@user.message(F.photo)
-async def photo_handler(message: Message) -> None:
-    await message.reply(str(message))
