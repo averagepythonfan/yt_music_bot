@@ -79,7 +79,7 @@ services:
       - .env
     environment:
       POSTGRES_HOST: db_prod
-      TOKEN: ${TOKEN_PROD}
+      TOKEN: ${TOKEN_DEV}
       REDIS_HOST: redis_dev
     volumes:
       - ./src:/app/src
