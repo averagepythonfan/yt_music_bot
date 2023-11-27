@@ -20,15 +20,19 @@ async def help_command(message: Message) -> None:
         status="guest"
     )
 
-    if await UserBotService.create_user(user=user_instance):
-        playlist_instance = PlaylistModel(
-            playlist_name="other",
-            user_id=message.from_user.id
-        )
+    try:
+        if await UserBotService.create_user(user=user_instance):
 
-        await PlaylistBotService.create_playlist(
-            pl=playlist_instance
-        )
+            playlist_instance = PlaylistModel(
+                playlist_name="other",
+                user_id=message.from_user.id
+            )
+
+            await PlaylistBotService.create_playlist(
+                pl=playlist_instance
+            )
+    except AssertionError:
+        pass
 
     await message.answer(help_message, parse_mode="HTML")
 
