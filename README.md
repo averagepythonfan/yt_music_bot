@@ -9,6 +9,6 @@ Main commands:
 3. /cut - cut single video on track by using timecodes (unavailable)
 
 Main stack:
-1. Telegram Bot - aiogram 3
-2. FastAPI backend - FastAPI + sqlalchemy + yt_dlp
+1. Telegram Bot - aiogram 3 + redis
+2. FastAPI backend - FastAPI + sqlalchemy + yt_dlp + redis
 3. Relative database - PostgreSQL
