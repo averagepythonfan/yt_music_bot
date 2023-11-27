@@ -46,7 +46,8 @@ services:
     environment:
       TOKEN: ${TOKEN_PROD}
       BACKEND: backend_prod
-      REDIS: ${REDIS_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: redis_prod
     volumes:
       - ./bot:/app/bot
     depends_on:

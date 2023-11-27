@@ -2,7 +2,7 @@ import asyncio
 import logging
 from redis.asyncio.client import Redis
 from aiogram import Dispatcher, Bot
-from bot.config import TOKEN, REDIS
+from bot.config import TOKEN, REDIS_HOST, REDIS_PASSWORD
 from bot.handlers import user, admin
 from bot.misc import commands_for_bot
 from aiogram.fsm.storage.redis import RedisStorage
@@ -11,7 +11,7 @@ from aiogram.fsm.storage.redis import RedisStorage
 async def main() -> None:
     logging.basicConfig(level=logging.DEBUG)
 
-    redis = Redis(host="redis_dev", password=REDIS)
+    redis = Redis(host=REDIS_HOST, password=REDIS_PASSWORD)
     storage = RedisStorage(redis=redis)
 
     dp = Dispatcher(storage=storage)

@@ -61,7 +61,8 @@ services:
     environment:
       TOKEN: ${TOKEN_DEV}
       BACKEND: backend
-      REDIS: ${REDIS_PASSWORD}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: redis_dev
     volumes:
       - ./bot:/app/bot
     depends_on:
