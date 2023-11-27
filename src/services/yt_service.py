@@ -52,13 +52,19 @@ class YouTubeService:
         with YoutubeDL({}) as ydl:
             # download video metadata
             info = ydl.extract_info(self.url, download=False)
-            title = copy.deepcopy(info['title'])
-            self.performer, self.song_name = (el.strip() for el in title.split("-"))
-            self.thumb_link = copy.deepcopy(info["thumbnail"])
+            self.video_title: str = copy.deepcopy(info['title'])
+            self.channel_name: str = copy.deepcopy(info["channel"])
+            self.thumb_link: str = copy.deepcopy(info["thumbnail"])
             del info
         self.config["outtmpl"] = f"{self.performer} - {self.song_name}"
         self.path_music = f"{os.getcwd()}/{self.performer} - {self.song_name}.m4a"
         self.is_sended = False
+        if len(self.video_title.split(" - ", maxsplit=2)) == 2:
+            self.performer, self.song_name = (
+                el.strip() for el in self.video_title.split(" - ", maxsplit=2)
+            )
+        else:
+            self.performer, self.song_name = self.channel_name, self.video_title
     
 
     @property
@@ -72,6 +78,15 @@ class YouTubeService:
             "path mp3": self.path_music,
         }
     
+
+    async def check_track_data(self) -> dict:
+        """Return a video data"""
+        return {
+            "title": self.video_title,
+            "channel": self.channel_name,
+            "thumbnail": self.thumb_link
+        }
+
 
     def _extract_audio(self):
         """Download video and convert it to audio

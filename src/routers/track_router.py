@@ -123,3 +123,13 @@ async def upload_track(
         )
 
         return {"result": await TrackService.add_track(uow=uow, track=track)}
+
+
+@router.get("/check/{url}")
+async def check_title(
+    url: str
+):
+    """Check video title"""
+
+    yt = YouTubeService(url=url)
+    return await yt.check_track_data()
