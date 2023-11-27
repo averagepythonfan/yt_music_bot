@@ -19,6 +19,7 @@ async def main() -> None:
 
     dp.include_router(router=user)
     dp.include_router(router=admin)
+
     await bot.set_my_commands(commands=commands_for_bot)
     await dp.start_polling(bot)
 

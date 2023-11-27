@@ -24,7 +24,7 @@ class YouTubeService:
         'match_filter': longer_then_12_min,
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'm4a',
+            'preferredcodec': 'mp3',
         }]
     }
 
@@ -59,7 +59,7 @@ class YouTubeService:
             self.thumb_link: str = copy.deepcopy(info["thumbnail"])
             del info
         self.config["outtmpl"] = f"{self.video_title}"
-        self.path_music = f"{os.getcwd()}/{self.video_title}.m4a"
+        self.path_music = f"{os.getcwd()}/{self.video_title}.mp3"
         self.is_sended = False
         if len(self.video_title.split(" - ", maxsplit=2)) == 2:
             self.performer, self.song_name = (
