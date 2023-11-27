@@ -2,6 +2,8 @@ from aiogram import Router, F
 from bot.filters import AdminFilter
 from aiogram.types import Message, Audio, PhotoSize
 from aiogram.filters import Command, CommandObject
+from bot.services import TrackBotService
+
 
 admin = Router()
 
@@ -26,3 +28,13 @@ async def chencge_status(message: Message, command: CommandObject):
         await message.reply("Success")
     else:
         await message.reply("There is not args")
+
+
+@admin.message(AdminFilter(), Command(commands=["check"]))
+async def check_title(message: Message, command: CommandObject):
+    if args := command.args:
+        data = await TrackBotService.check_title(url=args)
+        await message.answer_photo(
+            photo=data["pic"],
+            caption=f"Title: {data['title']}\nChannel: {data['chennel']}"
+        )
