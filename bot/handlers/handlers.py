@@ -2,6 +2,7 @@ from aiogram import Router
 from aiogram import F
 from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
+from aiogram.methods import DeleteMessage
 from bot.services import UserBotService, PlaylistBotService, TrackBotService
 from bot.misc import help_message
 from bot.schemas import UserModel, PlaylistModel
@@ -49,14 +50,8 @@ async def load_track(message: Message, command: CommandObject) -> None:
                 url=args,
                 user_id=message.from_user.id
             ):
-                message.delete(
-                    chat_id=message.from_user.id,
-                    message_id=message.message_id
-                )
-                message.delete(
-                    chat_id=message.from_user.id,
-                    message_id=response.message_id
-                )
+                message.delete()
+                response.delete()
             else:
                 await message.answer("Oops, something went wrong...")
         else:
