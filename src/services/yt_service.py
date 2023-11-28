@@ -1,6 +1,7 @@
 import copy
 import os
 from io import BytesIO
+from pydub import AudioSegment, effects
 from typing import Optional
 from yt_dlp import YoutubeDL
 from .misc import (tg_post_request,
@@ -136,10 +137,18 @@ class YouTubeService:
         img.save(fp=self.path_thumbnail)
 
 
+    def _normalize_audio(self):
+        rawsound = AudioSegment.from_file(file=self.path_music, format="mp3")
+        normalizedsound = effects.normalize(rawsound)
+        self.norm_audio = f"{os.getcwd()}/{self.video_title}_normalize.mp3"
+        normalizedsound.export(self.norm_audio, format="mp3")
+
+
     def _clear_data(self):
         """Delete audio and thumbnail files."""
         os.remove(self.path_music)
         os.remove(self.path_thumbnail)
+        os.remove(self.norm_audio)
     
 
     async def _send_to_user(self, user_id: int) -> Optional[ClientResponse]:
