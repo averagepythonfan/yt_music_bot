@@ -23,7 +23,7 @@ class TrackModel(BaseModel):
     playlist_id: int
     track_link: str
     track_tg_id: str
-    track_thumbnail: str
+    track_thumbnail: Optional[str] = None
     performer: str
     title: str
     reg_date: Optional[datetime.datetime] = None

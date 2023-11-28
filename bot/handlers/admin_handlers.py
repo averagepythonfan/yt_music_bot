@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from bot.filters import AdminFilter
 from aiogram.types import Message, Audio, PhotoSize
+from aiogram.methods import SendAudio
 from aiogram.filters import Command, CommandObject
 from bot.services import TrackBotService
 
@@ -8,13 +9,20 @@ from bot.services import TrackBotService
 admin = Router()
 
 
+# failed
 @admin.message(AdminFilter(), F.photo)
 async def change_pic(message: Message):
     if msg := message.reply_to_message:
         audio = isinstance(msg.audio, Audio)
         pic = isinstance(message.photo[1], PhotoSize)
         if audio and pic:
-            await message.answer("AUDIO MOCK!")
+            result: SendAudio = await message.answer_audio(
+                audio=msg.audio.file_id,
+                performer=msg.audio.performer,
+                title=msg.audio.title,
+                thumbnail=message.photo[1].file_id
+            )
+            # print(result)
         else:
             await message.reply("Please select audio, and reply a pucture")
     else:

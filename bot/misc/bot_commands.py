@@ -5,6 +5,7 @@ bot_commands = (
     ('track', 'load one track from vid'),
     ("playlist", "load YT playlist (unavailable)"),
     ('status', 'user status'),
+    ('help', 'help command'),
     ('cut', "cut one vid with timings (unavailable)"),
 )
 
