@@ -102,7 +102,7 @@ async def upload_track(
     Return a track_id that depends on message id from tg response."""
 
     resp: AsyncResult = yt_task.delay(vid.url, vid.user_id)
-    resp = resp.collect()
+    resp = resp.get()
 
     if resp:
         plst_lst: List[dict] = await PlaylistService.read_playlist(
