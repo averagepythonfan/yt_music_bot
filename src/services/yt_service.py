@@ -137,15 +137,18 @@ class YouTubeService:
         img.save(fp=self.path_thumbnail)
 
 
-    def _normalize_audio(self):
+    def _normalize_audio(self) -> None:
+        """Normalize audio and asign normalized audio path"""
+
         rawsound = AudioSegment.from_file(file=self.path_music, format="mp3")
         normalizedsound = effects.normalize(rawsound)
         self.norm_audio = f"{os.getcwd()}/{self.video_title}_normalize.mp3"
         normalizedsound.export(self.norm_audio, format="mp3")
 
 
-    def _clear_data(self):
+    def _clear_data(self) -> None:
         """Delete audio and thumbnail files."""
+
         os.remove(self.path_music)
         os.remove(self.path_thumbnail)
         os.remove(self.norm_audio)
@@ -195,6 +198,7 @@ class YouTubeService:
         """Makes a full pipeline of YouTube-to-Telegram transitions."""
         self._extract_audio()
         await self._extract_thumbnail()
+        self._normalize_audio()
         self.response_data = await self._send_to_user(user_id=user_id)
         # if self.response_data:
         #     self.is_sended = True
