@@ -111,15 +111,19 @@ async def upload_track(
         )
 
         plst = plst_lst[0]
-
         playlist_id = plst.get("id")
+
+        try:
+            tn = resp['result']['audio']['thumbnail']['file_id']
+        except KeyError:
+            tn = None
 
         track = TrackModel(
             id=resp["result"]["message_id"],
             playlist_id=playlist_id,
             track_link=vid.url,
             track_tg_id=resp['result']['audio']['file_id'],
-            track_thumbnail=resp['result']['audio']['thumbnail']['file_id'],
+            track_thumbnail=tn,
             performer=resp['result']['audio']['performer'],
             title=resp['result']['audio']['title']
         )
