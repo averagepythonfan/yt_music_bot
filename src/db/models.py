@@ -58,7 +58,7 @@ class Tracks(Base):
     playlist_id: Mapped[int] = mapped_column(ForeignKey("playlists.id"))
     track_link: Mapped[str] = mapped_column(unique=False)
     track_tg_id: Mapped[str] = mapped_column(unique=False)
-    track_thumbnail: Mapped[str] = mapped_column(unique=False)
+    track_thumbnail: Mapped[Optional[str]]
     performer: Mapped[str] = mapped_column(unique=False)
     title: Mapped[str] = mapped_column(unique=False)
     reg_date: Mapped[datetime.datetime] = mapped_column(DATE, default=datetime.datetime.today())

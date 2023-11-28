@@ -35,6 +35,13 @@
           - docker-compose-dev.yml
       tags:
         - up
+
+    - name: run alembic migrations
+      community.docker.docker_container_exec:
+        container: backend
+        command: /bin/bash -c "cd /app/src/ && alembic upgrade head"
+      tags:
+        - up
     
     - name: Down all dev services
       ansible.builtin.shell:
