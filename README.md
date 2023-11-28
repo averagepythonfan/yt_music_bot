@@ -10,5 +10,34 @@ Main commands:
 
 Main stack:
 1. Telegram Bot - aiogram 3 + redis
-2. FastAPI backend - FastAPI + sqlalchemy + yt_dlp + redis
+2. Backend - FastAPI + sqlalchemy + yt_dlp + celery
 3. Relative database - PostgreSQL
+
+
+## To run your own instance:
+Pre-requirements: git, docker, docker compose, python 3.10, poetry
+
+# Requirements:
+- Firstly you need to clone repository:
+```
+~$: git clone https://github.com/averagepythonfan/yt_music_bot.git
+```
+
+- Then install poetry dev group, it install ansible on your computer:
+```
+~$: poetry install --only=dev
+```
+
+- Rename "inventory-example.ini" to "inventory.ini",
+do it to "ansible-example.cfg" exactly the same.
+
+- Edit "invetory.ini" and "ansible.cfg" with your own options.
+
+- Then run command, that run ansible playbook script:
+```
+~$: ansible-playbook playbooks/dev.yml --tags="up"
+```
+OR
+```
+~$: ansible-playbook playbooks/prod.yml --tags="up"
+```
