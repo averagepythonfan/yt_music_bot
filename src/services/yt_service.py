@@ -164,7 +164,7 @@ class YouTubeService:
         data.add_field(name="title", value=self.song_name)
         data.add_field(name="parse_mode", value="HTML")
 
-        audio = open(self.path_music, "rb")
+        audio = open(self.norm_audio, "rb")
 
         data.add_field(
             name="audio",
