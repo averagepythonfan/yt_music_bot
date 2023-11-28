@@ -11,7 +11,7 @@ Commands:
 
 <b>/status</b> - show user's status: <i>`GUEST`</i> - default.
 
-Also if you want to run your own instanse of bot,
+Also if you want to run your own instance of bot,
 you can clone <b><a href="https://github.com/averagepythonfan/yt_music_bot">repository</a></b>
 
-Contact me directy: <b>@forgottenbb</b>"""
+Contact me directly: <b>@forgottenbb</b>"""

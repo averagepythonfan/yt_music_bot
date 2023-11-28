@@ -1,4 +1,5 @@
 from typing import Annotated, List
+from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, HTTPException
 from src.schemas import TrackModel, SingleVid
 from src.services import TrackService, YouTubeService, PlaylistService
@@ -100,7 +101,8 @@ async def upload_track(
     
     Return a track_id that depends on message id from tg response."""
 
-    resp = yt_task.delay(vid.url, vid.user_id)
+    resp: AsyncResult = yt_task.delay(vid.url, vid.user_id)
+    resp = resp.collect()
 
     if resp:
         plst_lst: List[dict] = await PlaylistService.read_playlist(
