@@ -50,8 +50,8 @@ async def load_track(message: Message, command: CommandObject) -> None:
                 url=args,
                 user_id=message.from_user.id
             ):
-                message.delete()
-                response.delete()
+                await message.delete()
+                await response.delete()
             else:
                 await message.answer("Oops, something went wrong...")
         else:
