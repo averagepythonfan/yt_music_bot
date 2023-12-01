@@ -46,10 +46,12 @@ async def load_track(message: Message, command: CommandObject) -> None:
     if args:
         if args.startswith("https://www.youtu") or args.startswith("https://youtu.be/"):
             response = await message.reply("Here we go! Please, wait")
-            if await TrackBotService.upload_track(
+            if r := await TrackBotService.upload_track(
                 url=args,
                 user_id=message.from_user.id
             ):
+                if failed := r.get("message"):
+                    await message.answer(f"{failed}")
                 await message.delete()
                 await response.delete()
             else:

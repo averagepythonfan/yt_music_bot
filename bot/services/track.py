@@ -7,6 +7,10 @@ class TrackBotService:
 
     @staticmethod
     async def upload_track(url: str, user_id: int):
+        """Send user track from URL's video,
+        If status is 200, return response data,
+        otherwise return `None`."""
+
         return await back_request(
             req=Request("post"),
             url=f"http://{BACKEND}:9090/track/upload",

@@ -11,9 +11,9 @@ async def back_request(req: Request,
     async with aiohttp.ClientSession() as session:
         if req is Request.get:
             async with session.get(url, params=params) as resp:
-                assert resp.status == 200
-                return await resp.json()
+                if resp.status == 200:
+                    return await resp.json()
         elif req is Request.post:
             async with session.post(url, json=params) as resp:
-                assert resp.status == 200
-                return True
+                if resp.status == 200:
+                    return True
