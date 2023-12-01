@@ -5,7 +5,7 @@ from .enums import Request
 
 async def back_request(req: Request,
                        url: str = "url",
-                       params: dict = dict()) -> Optional[bool]:
+                       params: dict = dict()) -> Optional[dict]:
     """Makes a request to backend: GET or POST"""
 
     async with aiohttp.ClientSession() as session:

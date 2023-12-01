@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated, List
 from celery.result import AsyncResult
 from fastapi import APIRouter, Depends, HTTPException
@@ -5,6 +6,10 @@ from src.schemas import TrackModel, SingleVid
 from src.services import TrackService, YouTubeService, PlaylistService
 from src.repository import UnitOfWork, InterfaceUnitOfWork
 from src.tasks.tasks import yt_task
+
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter(
@@ -68,6 +73,7 @@ async def update_track(
         data=data
     )
     if result:
+
         return {"response": result}
 
 
@@ -104,6 +110,8 @@ async def upload_track(
     resp: AsyncResult = yt_task.delay(vid.url, vid.user_id)
     resp = resp.get()
 
+    # logger.info(f"Response from celery: {resp}")
+
     if isinstance(resp, dict):
         plst_lst: List[dict] = await PlaylistService.read_playlist(
             uow=uow,
@@ -128,9 +136,14 @@ async def upload_track(
             title=resp['result']['audio']['title']
         )
 
-        return {"result": await TrackService.add_track(uow=uow, track=track)}
+        track_response = await TrackService.add_track(uow=uow, track=track)
+
+        logger.info(f"track added: {track_response}")
+
+        return {"result": track_response}
 
     elif isinstance(resp, str):
+        logger.info(f"failed to add track: {resp}")
         return {"status": "failed",
                 "message": f"{resp}"}
 
