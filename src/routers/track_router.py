@@ -104,7 +104,7 @@ async def upload_track(
     resp: AsyncResult = yt_task.delay(vid.url, vid.user_id)
     resp = resp.get()
 
-    if resp:
+    if isinstance(resp, dict):
         plst_lst: List[dict] = await PlaylistService.read_playlist(
             uow=uow,
             data={"user_id": vid.user_id, "playlist_name": "other"}
@@ -129,6 +129,11 @@ async def upload_track(
         )
 
         return {"result": await TrackService.add_track(uow=uow, track=track)}
+
+    elif isinstance(resp, str):
+        return {"status": "failed",
+                "message": f"{resp}"}
+
 
 
 @router.get("/check/{url}")

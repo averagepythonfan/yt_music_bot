@@ -33,9 +33,12 @@ class YtInstance(Enum):
     playlist = "playlist"
 
 
+class VideoTooLong(BaseException):
+    pass
+
 
 def longer_then_12_min(info, *, incomplete):
     """Download only videos longer than a minute (or with unknown duration)"""
     duration = info.get('duration')
     if duration and duration > 720:
-        return 'The video is too long'
+        raise VideoTooLong("Video is too long")

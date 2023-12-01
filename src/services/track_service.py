@@ -11,7 +11,7 @@ class TrackService:
     @staticmethod
     async def add_track(uow: InterfaceUnitOfWork,
                         track: TrackModel) -> Optional[int]:
-        """Create track"""
+        """Create track by data. Return track ID."""
 
         data = track.model_dump(exclude_none=True)
         async with uow:
