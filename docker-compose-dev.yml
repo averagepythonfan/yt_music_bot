@@ -17,18 +17,6 @@ services:
       retries: 3
       start_period: 40s
     restart: on-failure
-  db_test:
-    image: postgres:alpine3.17
-    container_name: db_test
-    env_file:
-      - .env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    restart: on-failure
   redis:
     image: redis:latest
     container_name: redis_dev
@@ -88,18 +76,18 @@ services:
       - redis
     restart: on-failure
     entrypoint: celery --app=src.tasks.tasks:celery worker -l INFO
-  # lab:
-  #   build:
-  #     context: .
-  #     dockerfile: docker/lab.Dockerfile
-  #   container_name: study_lab
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     POSTGRES_HOST: yt_db
-  #     TOKEN: ${TOKEN_DEV}
-  #   ports:
-  #     - "${LAB_PORT}:${LAB_PORT}"
-  #   volumes:
-  #     - ./data:/app/data
-  #   entrypoint: jupyter lab --ip=0.0.0.0 --port=${LAB_PORT} --no-browser --allow-root
+  lab:
+    build:
+      context: .
+      dockerfile: docker/lab.Dockerfile
+    container_name: study_lab
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: yt_db
+      TOKEN: ${TOKEN_DEV}
+    ports:
+      - "${LAB_PORT}:${LAB_PORT}"
+    volumes:
+      - ./data:/app/data
+    entrypoint: jupyter lab --ip=0.0.0.0 --port=${LAB_PORT} --no-browser --allow-root
