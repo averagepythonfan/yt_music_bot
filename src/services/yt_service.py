@@ -133,8 +133,8 @@ class YouTubeService:
         
         img = img.crop((left, top, right, bottom))
         img = img.resize(size=(320, 320))
-        self.path_thumbnail = f"{os.getcwd()}/thumbnail.png"
-        img.save(fp=self.path_thumbnail)
+        self.path_thumbnail = f"{os.getcwd()}/thumbnail.jpeg"
+        img.save(fp=self.path_thumbnail, format="jpeg", quality=90)
 
 
     def _normalize_audio(self) -> None:
