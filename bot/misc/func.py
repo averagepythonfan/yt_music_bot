@@ -1,6 +1,10 @@
 from typing import Optional
 import aiohttp
+import logging
 from .enums import Request
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger("backend.request")
 
 
 async def back_request(req: Request,
@@ -12,8 +16,12 @@ async def back_request(req: Request,
         if req is Request.get:
             async with session.get(url, params=params) as resp:
                 if resp.status == 200:
-                    return await resp.json()
+                    data = await resp.json()
+                    logger.info(f"data: {data}")
+                    return data
         elif req is Request.post:
             async with session.post(url, json=params) as resp:
                 if resp.status == 200:
-                    return True
+                    data = await resp.json()
+                    logger.info(f"data: {data}")
+                    return data
