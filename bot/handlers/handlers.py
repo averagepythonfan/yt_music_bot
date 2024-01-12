@@ -75,3 +75,31 @@ async def user_status(message: Message) -> None:
         await message.reply(f"<b>USER ID</b>: <i>{answer.id}</i>\nSTATUS: {answer.status}",
                             parse_mode="HTML")
 
+
+@user.message(Command(commands=["podcast"]))
+async def load_track(message: Message, command: CommandObject) -> None:
+    '''Load track from link'''
+
+    args = command.args
+    if args:
+        if args.startswith("https://www.youtube.com/watch") or args.startswith("https://youtu.be/"):
+            response = await message.reply("Here we go! Please, wait")
+            if r := await TrackBotService.upload_podcast(
+                url=args,
+                user_id=message.from_user.id
+            ):
+                if failed := r.get("message"):
+                    await message.answer(f"{failed}")
+                await message.delete()
+                await response.delete()
+            else:
+                await message.answer("Oops, something went wrong...")
+        else:
+            await message.reply(
+                text="""Invalid link.
+                Should start like <i>https://www.youtube.com/watch?v=</i>
+                or <i>https://youtu.be/</i>""",
+                parse_mode="HTML"
+            )
+    else:
+        await message.reply("No arguments")
