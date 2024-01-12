@@ -15,7 +15,7 @@ Main stack:
 
 
 ## To run your own instance:
-Pre-requirements: git, docker, docker compose, python 3.10, poetry
+Pre-requirements: git, docker, docker compose, python 3.10, poetry, make
 
 # Requirements:
 - Firstly you need to clone repository:
