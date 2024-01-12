@@ -60,7 +60,7 @@ class YouTubeService:
         assert isinstance(instanse, YtInstance), "YtInstance must be video or playlist"
 
         self.url = url
-        self.config = self.podcast_config if podcast is None else self.default_config
+        self.config = self.podcast_config if podcast else self.default_config
         with YoutubeDL({}) as ydl:
             # download video metadata
             info = ydl.extract_info(self.url, download=False)

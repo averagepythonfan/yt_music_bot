@@ -47,4 +47,4 @@ def longer_then_12_min(info, *, incomplete):
 def podcast_lenght(info, *, incomplete):
     duration = info.get('duration')
     if duration and (1800 > duration > 8400):
-        raise VideoTooLong("Video is too long or too short, must be between 30 min and 2 hours 20 min")
+        raise VideoTooLong("Video is too long, podcast must be no longer than 2 hours 20 min")
