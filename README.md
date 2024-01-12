@@ -28,16 +28,15 @@ Pre-requirements: git, docker, docker compose, python 3.10, poetry, make
 ~$: poetry install --only=dev
 ```
 
-- Rename "inventory-example.ini" to "inventory.ini",
-do it to "ansible-example.cfg" exactly the same.
+- Rename "inventory-example.ini" to "inventory.ini", do it to "ansible-example.cfg" exactly the same.
 
 - Edit "invetory.ini" and "ansible.cfg" with your own options.
 
 - Then run command, that run ansible playbook script:
 ```
-~$: ansible-playbook playbooks/dev.yml --tags="up"
+~$: make deploy_dev
 ```
 OR
 ```
-~$: ansible-playbook playbooks/prod.yml --tags="up"
+~$: make deploy_prod
 ```

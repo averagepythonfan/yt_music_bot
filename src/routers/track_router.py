@@ -123,7 +123,6 @@ async def upload_track(
     resp: AsyncResult = yt_task.delay(vid.url, vid.user_id, yt_opt)
     resp = resp.get()
 
-    # logger.info(f"Response from celery: {resp}")
 
     if isinstance(resp, dict):
         plst_lst: List[dict] = await PlaylistService.read_playlist(
