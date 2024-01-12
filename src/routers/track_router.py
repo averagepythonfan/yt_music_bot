@@ -103,7 +103,6 @@ async def delete_track_by_id(
 async def upload_track(
     vid: SingleVid,
     uow: Annotated[InterfaceUnitOfWork, Depends(UnitOfWork)],
-    podcast: bool = False,
 ):
     """Requires a single video scheme: url and user ID.
     
@@ -118,7 +117,7 @@ async def upload_track(
         }]
     }
 
-    yt_opt = podcast_opt if podcast else None
+    yt_opt = podcast_opt if vid.podcast else None
 
     resp: AsyncResult = yt_task.delay(vid.url, vid.user_id, yt_opt)
     resp = resp.get()

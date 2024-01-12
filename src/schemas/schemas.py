@@ -32,3 +32,4 @@ class TrackModel(BaseModel):
 class SingleVid(BaseModel):
     user_id: int
     url: str
+    podcast: bool = False

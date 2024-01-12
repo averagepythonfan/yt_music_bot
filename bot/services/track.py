@@ -33,7 +33,7 @@ class TrackBotService:
             params={
                 "user_id": user_id,
                 "url": url,
-                "podcast": True,
+                "podcast": 'true',
             }
         )
 
