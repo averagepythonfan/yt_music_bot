@@ -6,6 +6,7 @@ from src.schemas import TrackModel, SingleVid
 from src.services import TrackService, YouTubeService, PlaylistService
 from src.repository import UnitOfWork, InterfaceUnitOfWork
 from src.tasks.tasks import yt_task
+from src.services.misc import podcast_lenght
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -101,13 +102,25 @@ async def delete_track_by_id(
 @router.post("/upload")
 async def upload_track(
     vid: SingleVid,
-    uow: Annotated[InterfaceUnitOfWork, Depends(UnitOfWork)]
+    uow: Annotated[InterfaceUnitOfWork, Depends(UnitOfWork)],
+    podcast: bool = False,
 ):
     """Requires a single video scheme: url and user ID.
     
     Return a track_id that depends on message id from tg response."""
 
-    resp: AsyncResult = yt_task.delay(vid.url, vid.user_id)
+    podcast_opt = {
+        'format': 'mp3/bestaudio/best',
+        'match_filter': podcast_lenght,
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+        }]
+    }
+
+    yt_opt = podcast_opt if podcast else None
+
+    resp: AsyncResult = yt_task.delay(vid.url, vid.user_id, yt_opt)
     resp = resp.get()
 
     # logger.info(f"Response from celery: {resp}")
