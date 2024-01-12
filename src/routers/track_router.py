@@ -6,7 +6,6 @@ from src.schemas import TrackModel, SingleVid
 from src.services import TrackService, YouTubeService, PlaylistService
 from src.repository import UnitOfWork, InterfaceUnitOfWork
 from src.tasks.tasks import yt_task
-from src.services.misc import podcast_lenght
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -108,20 +107,8 @@ async def upload_track(
     
     Return a track_id that depends on message id from tg response."""
 
-    podcast_opt = {
-        'format': 'mp3/bestaudio/best',
-        'match_filter': podcast_lenght,
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-        }]
-    }
-
-    yt_opt = podcast_opt if vid.podcast else None
-
-    resp: AsyncResult = yt_task.delay(vid.url, vid.user_id, yt_opt)
+    resp: AsyncResult = yt_task.delay(vid.url, vid.user_id, vid.podcast)
     resp = resp.get()
-
 
     if isinstance(resp, dict):
         plst_lst: List[dict] = await PlaylistService.read_playlist(

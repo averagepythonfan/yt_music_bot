@@ -6,7 +6,8 @@ from typing import Optional
 from yt_dlp import YoutubeDL
 from .misc import (tg_post_request,
                    YtInstance,
-                   longer_then_12_min)
+                   longer_then_12_min,
+                   podcast_lenght)
 from PIL import Image
 from aiohttp import (ClientResponse,
                      ClientSession,
@@ -28,9 +29,18 @@ class YouTubeService:
         }]
     }
 
+    podcast_config = {
+        'format': 'mp3/bestaudio/best',
+        'match_filter': podcast_lenght,
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+        }]
+    }
+
     def __init__(self,
                  url: str,
-                 yt_opt: dict = None,
+                 podcast: bool = False,
                  instanse: YtInstance = YtInstance("video")) -> None:
         """Init YouTubeService instance.
         
@@ -50,7 +60,7 @@ class YouTubeService:
         assert isinstance(instanse, YtInstance), "YtInstance must be video or playlist"
 
         self.url = url
-        self.config = self.default_config if yt_opt is None else yt_opt
+        self.config = self.podcast_config if podcast is None else self.default_config
         with YoutubeDL({}) as ydl:
             # download video metadata
             info = ydl.extract_info(self.url, download=False)

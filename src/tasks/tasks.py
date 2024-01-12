@@ -12,8 +12,8 @@ celery.conf.broker_url = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:6379"
 celery.conf.result_backend = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:6379"
 
 
-async def yt_service_run(url: str, user_id: int, yt_opt: dict = None):
-    yt = YouTubeService(url=url, yt_opt=yt_opt)
+async def yt_service_run(url: str, user_id: int, podcast: bool = False):
+    yt = YouTubeService(url=url, podcast=podcast)
     try:
         return await yt.from_yt_to_tg(user_id=user_id)
     except VideoTooLong as e:
@@ -21,9 +21,9 @@ async def yt_service_run(url: str, user_id: int, yt_opt: dict = None):
 
 
 @celery.task(name="yt_task")
-def yt_task(url: str, user_id: int, yt_opt: dict = None):
+def yt_task(url: str, user_id: int, podcast: bool = False):
     return run(yt_service_run(
         url=url,
         user_id=user_id,
-        yt_opt=yt_opt
+        podcast=podcast
     ))
